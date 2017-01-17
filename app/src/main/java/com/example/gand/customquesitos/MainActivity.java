@@ -9,5 +9,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DiagramaQueso pie = (DiagramaQueso) findViewById(R.id.diagrama);
+        float[] data = {450, 630, 300, 200, 400};
+        pie.setData(data);
     }
 }
