@@ -31,6 +31,40 @@ public class DiagramaQueso extends View {
 
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // Determine horizontal and vertical padding
+        int paddingX = getPaddingLeft() + getPaddingRight();
+        int paddingY = getPaddingBottom() + getPaddingTop();
+
+        int minW, minH, w, h;
+        switch (MeasureSpec.getMode(heightMeasureSpec)) {
+            case MeasureSpec.EXACTLY:
+                // Try for a height based on our minimum including vertical padding
+                minH = getSuggestedMinimumHeight() + paddingY;
+                h = MeasureSpec.getSize(heightMeasureSpec);
+
+                // Set the width according to the height as our control should be
+                // square, again compensating for padding
+                minW = MeasureSpec.getSize(h) - paddingY + paddingX;
+                w = resolveSize(minW, widthMeasureSpec);
+                break;
+            default:
+                // Try for a width based on our minimum including horizontal padding
+                minW = getSuggestedMinimumWidth() + paddingX;
+                w = resolveSize(minW, widthMeasureSpec);
+
+                // Set the height according to the width as our control should be
+                // square, again compensating for padding
+                minH = MeasureSpec.getSize(w) - paddingX + paddingY;
+                h = resolveSize(minH, heightMeasureSpec);
+                break;
+        }
+
+        setMeasuredDimension(w, h);
+    }
+
+
     private float[] pieSegment(){
 
         float[] segValues = new float[this.data.length];
