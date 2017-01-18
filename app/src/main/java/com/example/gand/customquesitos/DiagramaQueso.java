@@ -20,6 +20,8 @@ public class DiagramaQueso extends View {
     private RectF rectF;
     private float[] data;
 
+    int top, left, endBottom, endRight;
+
     public DiagramaQueso(Context context, AttributeSet attrs){
         super(context,attrs);
 
@@ -64,6 +66,18 @@ public class DiagramaQueso extends View {
         setMeasuredDimension(w, h);
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        // Account for padding
+        left = getPaddingLeft();
+        top = getPaddingTop();
+        int diameter = Math.min(
+                w - left - getPaddingRight(),
+                h - top - getPaddingBottom());
+        endRight = left + diameter;
+        endBottom= top + diameter;
+    }
 
     private float[] pieSegment(){
 
@@ -95,10 +109,6 @@ public class DiagramaQueso extends View {
 
         if (data != null){
 
-            int top = 0;
-            int left = 0;
-            int endBottom = getHeight();
-            int endRight = endBottom;
 
             rectF = new RectF(left, top, endRight, endBottom);
 
