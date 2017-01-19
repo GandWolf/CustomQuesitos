@@ -19,7 +19,7 @@ public class DiagramaQueso extends View {
     private Paint quesoPaint, circuloPaint;
     private RectF rectF;
     private float arrayDatos[];
-    private int arrayColor[];
+    private static int arrayColor[];
 
     int top, left, endBottom, endRight, diametro, grosor;
 
@@ -122,15 +122,28 @@ public class DiagramaQueso extends View {
             float[] segment = pieSegment();
             float segStartPoint = 0;
 
-
-
-            for (int i = 0; i < segment.length; i++){
-//                Random rnd = new Random();
-//                int color = Color.argb(255, (int)segment[i], rnd.nextInt(256), rnd.nextInt(256));
-//                quesoPaint.setColor(color);
-                quesoPaint.setColor(arrayColor[i]);
-                canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
-                segStartPoint += segment[i];
+            if (arrayColor == null) {
+                arrayColor = new int[segment.length];
+                for (int i = 0; i < segment.length; i++) {
+                    Random rnd = new Random();
+                    int color;
+                    if ((int) segment[i] < 100) {
+                        color = Color.argb(255, (int) segment[i], (int) segment[i], rnd.nextInt(150) + 100);
+                        quesoPaint.setColor(color);
+                    } else {
+                        color = Color.argb(255, 255 - (int) segment[i], 255 - (int) segment[i], rnd.nextInt(150) + 100);
+                        quesoPaint.setColor(color);
+                    }
+                    arrayColor[i] = color;
+                    canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
+                    segStartPoint += segment[i];
+                }
+            }else {
+                for (int i = 0; i < segment.length; i++) {
+                    quesoPaint.setColor(arrayColor[i]);
+                    canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
+                    segStartPoint += segment[i];
+                }
             }
             canvas.drawCircle(left+(diametro/2),(top + diametro/2),(diametro/2),circuloPaint);
         }
@@ -139,7 +152,7 @@ public class DiagramaQueso extends View {
     public void setArrayDatos(float[] arrayDatos, int [] arrayColor){
 
         this.arrayDatos = arrayDatos;
-        this.arrayColor = arrayColor;
+//        this.arrayColor = arrayColor;
         invalidate();
     }
 }//Fin class
