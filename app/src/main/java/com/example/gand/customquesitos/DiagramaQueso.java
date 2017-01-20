@@ -87,7 +87,7 @@ public class DiagramaQueso extends View {
         endBottom= top + diametro;
     }
 
-    private float[] pieSegment(){
+    private float[] segmentos(){
 
         float[] segValues = new float[this.arrayDatos.length];
         float Total = getTotal();
@@ -119,39 +119,89 @@ public class DiagramaQueso extends View {
 
             rectF = new RectF(left, top, endRight, endBottom);
 
-            float[] segment = pieSegment();
+            float[] segment = segmentos();
             float segStartPoint = 0;
 
-            if (arrayColor == null) {
-                arrayColor = new int[segment.length];
-                for (int i = 0; i < segment.length; i++) {
-                    Random rnd = new Random();
-                    int color;
-                    if ((int) segment[i] < 100) {
-                        color = Color.argb(255, (int) segment[i], (int) segment[i], rnd.nextInt(150) + 100);
-                        quesoPaint.setColor(color);
-                    } else {
-                        color = Color.argb(255, 255 - (int) segment[i], 255 - (int) segment[i], rnd.nextInt(150) + 100);
-                        quesoPaint.setColor(color);
-                    }
-                    arrayColor[i] = color;
-                    canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
-                    segStartPoint += segment[i];
-                }
-            }else {
-                for (int i = 0; i < segment.length; i++) {
-                    quesoPaint.setColor(arrayColor[i]);
-                    canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
-                    segStartPoint += segment[i];
-                }
+//            if (arrayColor == null) {
+//                arrayColor = new int[segment.length];
+//                for (int i = 0; i < segment.length; i++) {
+//                    Random rnd = new Random();
+//                    int color;
+//                    if ((int) segment[i] < 100) {
+//                        color = Color.argb(255, (int) segment[i], (int) segment[i], rnd.nextInt(150) + 100);
+//                        quesoPaint.setColor(color);
+//                    } else {
+//                        color = Color.argb(255, 255 - (int) segment[i], 255 - (int) segment[i], rnd.nextInt(150) + 100);
+//                        quesoPaint.setColor(color);
+//                    }
+//                    arrayColor[i] = color;
+//                    canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
+//                    segStartPoint += segment[i];
+//                }
+//            }else {
+//                for (int i = 0; i < segment.length; i++) {
+//                    quesoPaint.setColor(arrayColor[i]);
+//                    canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
+//                    segStartPoint += segment[i];
+//                }
+//            }
+
+            generarColor(2);
+            for (int i = 0; i < segment.length; i++) {
+                quesoPaint.setColor(arrayColor[i]);
+                canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
+                segStartPoint += segment[i];
             }
+
             canvas.drawCircle(left+(diametro/2),(top + diametro/2),(diametro/2),circuloPaint);
+        }
+    }
+
+    void generarColor(int c){
+        int []c1=new int[arrayDatos.length];
+        int []c2=new int[c1.length];
+        int []c3=new int[c1.length];
+
+        Random rnd = new Random();
+
+        for (int i = 0; i < c1.length; i++){
+            if (i%2==0){
+                c1[i] = 255 - (i/c1.length*175);
+            }else {
+                c1[i] = 175 + ((c1.length-i)/c1.length*255);
+            }
+
+            c2[i] = rnd.nextInt(75);
+            c3[i] = rnd.nextInt(75);
+        }
+
+        switch (c){
+            case 1:
+                for (int i = 0; i < c1.length; i++){
+                arrayColor [i] = Color.argb(255, c1[i], c2[i], c3[i]);
+                }
+                break;
+            case 2:
+                for (int i = 0; i < c1.length; i++){
+                arrayColor [i] = Color.argb(255, c2[i], c1[i], c3[i]);
+                }
+                break;
+            case 3:
+                for (int i = 0; i < c1.length; i++){
+                arrayColor [i] = Color.argb(255, c2[i], c3[i], c1[i]);
+                }
+                break;
+            default:
+                for (int i = 0; i < c1.length; i++){
+                arrayColor [i] = Color.argb(255, c1[i], c2[i], c3[i]);
+                }
         }
     }
 
     public void setArrayDatos(float[] arrayDatos, int [] arrayColor){
 
         this.arrayDatos = arrayDatos;
+        this.arrayColor = new int[arrayDatos.length];
 //        this.arrayColor = arrayColor;
         invalidate();
     }
