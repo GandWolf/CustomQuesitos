@@ -56,39 +56,6 @@ public class DiagramaQueso extends View {
 
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        // Determine horizontal and vertical padding
-//        int paddingX = getPaddingLeft() + getPaddingRight() + grosor;
-//        int paddingY = getPaddingBottom() + getPaddingTop() + grosor;
-//
-//        int minW, minH, w, h;
-//        switch (MeasureSpec.getMode(heightMeasureSpec)) {
-//            case MeasureSpec.EXACTLY:
-//                // Try for a height based on our minimum including vertical padding
-//                minH = getSuggestedMinimumHeight() + paddingY + grosor;
-//                h = MeasureSpec.getSize(heightMeasureSpec);
-//
-//                // Set the width according to the height as our control should be
-//                // square, again compensating for padding
-//                minW = MeasureSpec.getSize(h) - paddingY + paddingX;
-//                w = resolveSize(minW, widthMeasureSpec);
-//                break;
-//            default:
-//                // Try for a width based on our minimum including horizontal padding
-//                minW = getSuggestedMinimumWidth() + paddingX;
-//                w = resolveSize(minW, widthMeasureSpec);
-//
-//                // Set the height according to the width as our control should be
-//                // square, again compensating for padding
-//                minH = MeasureSpec.getSize(w) - paddingX + paddingY;
-//                h = resolveSize(minH, heightMeasureSpec);
-//                break;
-//        }
-//
-//        setMeasuredDimension(w, h);
-//    }
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -103,27 +70,23 @@ public class DiagramaQueso extends View {
     }
 
     private float[] segmentos(){
-
-        float[] segValues = new float[this.arrayDatos.length];
+        float[] segDatos = new float[this.arrayDatos.length];
         float Total = getTotal();
 
         for (int i = 0; i < this.arrayDatos.length; i++){
-
-            segValues[i] = (this.arrayDatos[i]/Total) * 360;
+            segDatos[i] = (this.arrayDatos[i]/Total) * 360;
         }
 
-        return segValues;
+        return segDatos;
     }
 
 
     private float getTotal(){
-
         float total = 0;
 
-        for (float val : this.arrayDatos){
-            total +=val;
+        for (float datos : this.arrayDatos){
+            total +=datos;
         }
-
         return total;
     }
 
@@ -137,31 +100,7 @@ public class DiagramaQueso extends View {
             float[] segment = segmentos();
             float segStartPoint = 0;
 
-//            if (arrayColor == null) {
-//                arrayColor = new int[segment.length];
-//                for (int i = 0; i < segment.length; i++) {
-//                    Random rnd = new Random();
-//                    int color;
-//                    if ((int) segment[i] < 100) {
-//                        color = Color.argb(255, (int) segment[i], (int) segment[i], rnd.nextInt(150) + 100);
-//                        quesoPaint.setColor(color);
-//                    } else {
-//                        color = Color.argb(255, 255 - (int) segment[i], 255 - (int) segment[i], rnd.nextInt(150) + 100);
-//                        quesoPaint.setColor(color);
-//                    }
-//                    arrayColor[i] = color;
-//                    canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
-//                    segStartPoint += segment[i];
-//                }
-//            }else {
-//                for (int i = 0; i < segment.length; i++) {
-//                    quesoPaint.setColor(arrayColor[i]);
-//                    canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
-//                    segStartPoint += segment[i];
-//                }
-//            }
-
-            generarColor(gamacolor);
+            int arrayColor = generarColor(gamacolor);
             for (int i = 0; i < segment.length; i++) {
                 quesoPaint.setColor(arrayColor[i]);
                 canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
@@ -217,6 +156,7 @@ public class DiagramaQueso extends View {
                 arrayColor [i] = Color.argb(255, c1[i], c2[i], c3[i]);
                 }
         }
+        return color;
     }
 
     public void setArrayDatos(float[] arrayDatos, int [] arrayColor){

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-
-    <array name="gamaRojo">
+    <integer-array name="gamaRojo">
         <item>#D22C21</item>
         <item>#DC2339</item>
         <item>#E62E00</item>
@@ -35,9 +31,9 @@
         <item>#E0115F</item>
         <item>#D5303E</item>
         <item>#820000</item>
-    </array>
+    </integer-array>
 
-    <array name="gamaVerde">
+    <integer-array name="gamaVerde">
         <item>#00B564</item>
         <item>#63e457</item>
         <item>#228b22</item>
@@ -68,9 +64,9 @@
         <item>#DFFF00</item>
         <item>#BFFF00</item>
         <item>#CFFDAF</item>
-    </array>
+    </integer-array>
 
-    <array name="gamaAzul">
+    <integer-array name="gamaAzul">
         <item>#0070B8</item>
         <item>#436b95</item>
         <item>#567797</item>
@@ -101,5 +97,6 @@
         <item>#0CB7F2</item>
         <item>#0087D1</item>
         <item>#000f89</item>
-    </array>
+    </integer-array>
+
 </resources>
