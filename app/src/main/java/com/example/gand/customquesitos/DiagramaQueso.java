@@ -1,6 +1,7 @@
 package com.example.gand.customquesitos;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +17,8 @@ import java.util.Random;
 
 public class DiagramaQueso extends View {
 
+    private int gamacolor;
+
     private Paint quesoPaint, circuloPaint;
     private RectF rectF;
     private float arrayDatos[];
@@ -25,6 +28,18 @@ public class DiagramaQueso extends View {
 
     public DiagramaQueso(Context context, AttributeSet attrs){
         super(context,attrs);
+
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs,
+                R.styleable.DiagramaQueso,
+                0, 0);
+
+        try {
+            gamacolor = a.getInteger(R.styleable.DiagramaQueso_gamacolores, 0);
+        } finally {
+            a.recycle();
+        }
+
 
         quesoPaint = new Paint();
         quesoPaint.setAntiAlias(true);
@@ -146,7 +161,7 @@ public class DiagramaQueso extends View {
 //                }
 //            }
 
-            generarColor(2);
+            generarColor(gamacolor);
             for (int i = 0; i < segment.length; i++) {
                 quesoPaint.setColor(arrayColor[i]);
                 canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
@@ -163,17 +178,23 @@ public class DiagramaQueso extends View {
         int []c3=new int[c1.length];
 
         Random rnd = new Random();
+        float seg = 1/arrayDatos.length;
+        int color = 0x777777;
 
-        for (int i = 0; i < c1.length; i++){
-            if (i%2==0){
-                c1[i] = 255 - (i/c1.length*175);
-            }else {
-                c1[i] = 175 + ((c1.length-i)/c1.length*255);
-            }
-
-            c2[i] = rnd.nextInt(75);
-            c3[i] = rnd.nextInt(75);
+        for (int i = 0; i < c1.length; i++) {
+//            if (i%2==0){
+//                c1[i] = 255 - (i/c1.length*175);
+//            }else {
+//                c1[i] = 175 + ((c1.length-i)/c1.length*255);
+//            }
+//
+//            c2[i] = rnd.nextInt(75);
+//            c3[i] = rnd.nextInt(75);
+            c1[i] = (int) (255 - i * seg);
+            c2[i] = (int) (200 * i / arrayDatos.length);
+            c3[i] = (int) (200 * i / arrayDatos.length);
         }
+
 
         switch (c){
             case 1:

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="DiagramaQueso">
+        <attr name="gamacolores" format="enum">
+            <enum name="red" value="1"/>
+            <enum name="green" value="2"/>
+            <enum name="blue" value="3"/>
+        </attr>
+    </declare-styleable>
+
+</resources>
