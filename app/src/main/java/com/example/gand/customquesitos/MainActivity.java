@@ -16,9 +16,11 @@ public class MainActivity extends AppCompatActivity {
 
         DiagramaQueso pie = (DiagramaQueso) findViewById(R.id.diagrama);
         float [] data = {rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75)};
+//        float [] data = {rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75),rnd.nextInt(75)};
         int [] color = {0xFF110000,0xFF330000,0xFF550000,0xFF770000,0xFF990000,0xFFbb0000,0xFFdd0000};
-
+        String [] nombre = {"AAA", "BBB", "CCC", "DDD", "EEE", "FFF", "GGG", "HHH", "III", "JJJ"};
+//        String [] nombre = {"AAA", "BBB", "CCC", "DDD", "EEE"};
 //        float [] data = {1,5,3};
-        pie.setArrayDatos(data, color);
+        pie.setArrayDatos(data, nombre);
     }
 }

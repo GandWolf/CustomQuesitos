@@ -1,6 +1,7 @@
 package com.example.gand.customquesitos;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -19,12 +21,14 @@ public class DiagramaQueso extends View {
 
     private int gamacolor;
 
-    private Paint quesoPaint, circuloPaint;
+    private final Paint quesoPaint, circuloPaint, textPaint;
     private RectF rectF;
     private float arrayDatos[];
-    private static int arrayColor[];
+    private String arrayNombre[];
+    private int[] arrayColor;
+    Resources r = getResources();
 
-    int top, left, endBottom, endRight, diametro, grosor;
+    int top, left, endBottom, endRight, diametro, grosor, distancia;
 
     public DiagramaQueso(Context context, AttributeSet attrs){
         super(context,attrs);
@@ -40,7 +44,6 @@ public class DiagramaQueso extends View {
             a.recycle();
         }
 
-
         quesoPaint = new Paint();
         quesoPaint.setAntiAlias(true);
         quesoPaint.setDither(true);
@@ -52,7 +55,9 @@ public class DiagramaQueso extends View {
         circuloPaint.setColor(Color.argb(255, 0, 0, 0));
         grosor = 10;
         circuloPaint.setStrokeWidth(grosor);
+        distancia = 40;
 
+        textPaint = new Paint();
 
     }
 
@@ -60,11 +65,11 @@ public class DiagramaQueso extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         // Account for padding
-        left = getPaddingLeft() + grosor/2;
-        top = getPaddingTop() + grosor/2;
+        left = getPaddingLeft() + grosor/2 + distancia*3;
+        top = getPaddingTop() + grosor/2 + distancia*3;
         diametro = Math.min(
-                w - left - getPaddingRight() - grosor/2,
-                h - top - getPaddingBottom() - grosor/2);
+                w - left - getPaddingRight() - grosor/2 - distancia*3,
+                h - top - getPaddingBottom() - grosor/2 - distancia*3);
         endRight = left + diametro;
         endBottom= top + diametro;
     }
@@ -100,7 +105,7 @@ public class DiagramaQueso extends View {
             float[] segment = segmentos();
             float segStartPoint = 0;
 
-            int arrayColor = generarColor(gamacolor);
+            arrayColor = generarColor(gamacolor);
             for (int i = 0; i < segment.length; i++) {
                 quesoPaint.setColor(arrayColor[i]);
                 canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
@@ -108,62 +113,61 @@ public class DiagramaQueso extends View {
             }
 
             canvas.drawCircle(left+(diametro/2),(top + diametro/2),(diametro/2),circuloPaint);
+            dibujarEtiquetas(canvas, (left+diametro/2), (top+diametro/2), diametro/2, distancia, textPaint, segment);
         }
     }
 
-    void generarColor(int c){
-        int []c1=new int[arrayDatos.length];
-        int []c2=new int[c1.length];
-        int []c3=new int[c1.length];
+    private void dibujarEtiquetas(Canvas canvas, float centroX, float centroY, float radio,
+                                  float distancia, Paint p, float[] segment) {
+        p.setTextSize(50);
+        p.setColor(0xff000000);
+        float position=0;
+        for (int i = 0; i < segment.length; i++) {
+            float theta=segment[i]/2;
 
-        Random rnd = new Random();
-        float seg = 1/arrayDatos.length;
-        int color = 0x777777;
-
-        for (int i = 0; i < c1.length; i++) {
-//            if (i%2==0){
-//                c1[i] = 255 - (i/c1.length*175);
+//            float theta = (float) (2*Math.PI*i/segment[i]- Math.PI/2);
+//            if (i == 0){
+//                theta = segment[i]/2;
 //            }else {
-//                c1[i] = 175 + ((c1.length-i)/c1.length*255);
+//                theta = segment[i-1]+segment[i]/2;
 //            }
-//
-//            c2[i] = rnd.nextInt(75);
-//            c3[i] = rnd.nextInt(75);
-            c1[i] = (int) (255 - i * seg);
-            c2[i] = (int) (200 * i / arrayDatos.length);
-            c3[i] = (int) (200 * i / arrayDatos.length);
+            float rho = radio + distancia;
+            float x = (float) (rho * Math.cos(position+theta));
+            float y = (float) (rho * Math.sin(position+theta));
+            position+=segment[i];
+            if(i == 0) {
+                p.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText(arrayNombre[i], x + centroX, y - distancia + centroY, p);
+            } else if(segment[i] <= 90 || segment[i] >= 270) {
+                p.setTextAlign(Paint.Align.LEFT);
+                canvas.drawText(arrayNombre[i], (float) ((rho+distancia) * Math.cos(theta)) + centroX,
+                        (float) ((rho+distancia) * Math.sin(theta)) + centroY, p);
+            } else {
+                p.setTextAlign(Paint.Align.RIGHT);
+                canvas.drawText(arrayNombre[i], (float) ((rho+distancia) * Math.cos(theta)) + centroX,
+                        (float) ((rho+distancia) * Math.sin(theta)) + centroY, p);
+            }
         }
+    }
 
-
+    int[] generarColor(int c){
+        int [] color=null;
         switch (c){
-            case 1:
-                for (int i = 0; i < c1.length; i++){
-                arrayColor [i] = Color.argb(255, c1[i], c2[i], c3[i]);
-                }
+            case 1: color = r.getIntArray(R.array.gamaRojo);
                 break;
-            case 2:
-                for (int i = 0; i < c1.length; i++){
-                arrayColor [i] = Color.argb(255, c2[i], c1[i], c3[i]);
-                }
+            case 2: color = r.getIntArray(R.array.gamaVerde);
                 break;
-            case 3:
-                for (int i = 0; i < c1.length; i++){
-                arrayColor [i] = Color.argb(255, c2[i], c3[i], c1[i]);
-                }
+            case 3: color = r.getIntArray(R.array.gamaAzul);
                 break;
-            default:
-                for (int i = 0; i < c1.length; i++){
-                arrayColor [i] = Color.argb(255, c1[i], c2[i], c3[i]);
-                }
+            default: color = r.getIntArray(R.array.gamaAzul);
         }
         return color;
     }
 
-    public void setArrayDatos(float[] arrayDatos, int [] arrayColor){
+    public void setArrayDatos(float[] arrayDatos, String[] nombre){
 
         this.arrayDatos = arrayDatos;
-        this.arrayColor = new int[arrayDatos.length];
-//        this.arrayColor = arrayColor;
+        this.arrayNombre = nombre;
         invalidate();
     }
 }//Fin class
