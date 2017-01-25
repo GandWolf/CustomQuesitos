@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -48,23 +49,26 @@ public class DiagramaQueso extends View {
         quesoPaint.setAntiAlias(true);
         quesoPaint.setDither(true);
         quesoPaint.setStyle(Paint.Style.FILL);
-//        quesoPaint.setShadowLayer(20,20,20,0xFF000000);
 
         circuloPaint = new Paint();
+        circuloPaint.setAntiAlias(true);
+        circuloPaint.setDither(true);
         circuloPaint.setStyle(Paint.Style.STROKE);
-        circuloPaint.setColor(Color.argb(255, 0, 0, 0));
-        grosor = 10;
+        circuloPaint.setColor(Color.argb(255, 5, 5, 5));
+        grosor = 6;
         circuloPaint.setStrokeWidth(grosor);
         distancia = 40;
 
         textPaint = new Paint();
+        textPaint.setTextSize(50);
+        textPaint.setColor(0xff000000);
 
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        // Account for padding
+
         left = getPaddingLeft() + grosor/2 + distancia*3;
         top = getPaddingTop() + grosor/2 + distancia*3;
         diametro = Math.min(
@@ -104,66 +108,73 @@ public class DiagramaQueso extends View {
 
             float[] segment = segmentos();
             float segStartPoint = 0;
-            float centroX=(left+diametro/2);
-            float centroY=top+diametro/2;
+            float centroX = left + diametro / 2;
+            float centroY = top + diametro / 2;
 
             arrayColor = generarColor(gamacolor);
             for (int i = 0; i < segment.length; i++) {
                 quesoPaint.setColor(arrayColor[i]);
                 canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
                 canvas.drawArc(rectF, segStartPoint, segment[i], true, circuloPaint);
-
-//                if (segStartPoint<=90) {
-//                    canvas.drawLine(centroX, centroY, (float) (centroX + (diametro / 2) * Math.cos(segStartPoint)), (float) (centroY + (diametro / 2) * Math.sin(segStartPoint )), circuloPaint);
-//                }else{
-//                    if (segStartPoint<=180){
-//                        canvas.drawLine(centroX, centroY, (float) (centroX - (diametro / 2) * Math.cos(segStartPoint )), (float) (centroY - (diametro / 2) * Math.sin(segStartPoint )), circuloPaint);
-//                    }else{
-//                        if (segStartPoint<=270){
-//                            canvas.drawLine(centroX, centroY, (float) (centroX + (diametro / 2) * Math.cos(segStartPoint )), (float) (centroY + (diametro / 2) * Math.sin(segStartPoint )), circuloPaint);
-//                        }else {
-//                            canvas.drawLine(centroX, centroY, (float) (centroX + (diametro / 2) * Math.cos(segStartPoint )), (float) (centroY + (diametro / 2) * Math.sin(segStartPoint )), circuloPaint);
-//                        }
-//                    }
-//                }
+                canvas.drawText(arrayNombre[i],centroX + (float)((diametro/1.8)*Math.cos(segStartPoint+segment[i]/2)),
+                        centroY + (float)((diametro/1.8)*Math.sin(segStartPoint+segment[i]/2)), textPaint);
 
                 segStartPoint += segment[i];
             }
-
-//            canvas.drawCircle(left+(diametro/2),(top + diametro/2),(diametro/2),circuloPaint);
-            dibujarEtiquetas(canvas, centroX, centroY, diametro/2, distancia, textPaint, segment);
+//            dibujarEtiquetas(canvas, centroX, centroY, segment);
         }
     }
 
-    private void dibujarEtiquetas(Canvas canvas, float centroX, float centroY, float radio,
-                                  float distancia, Paint p, float[] segment) {
-        p.setTextSize(50);
-        p.setColor(0xff000000);
+    private void dibujarEtiquetas(Canvas canvas, float centroX, float centroY, float[] segment) {
+        textPaint.setTextSize(50);
+        textPaint.setColor(0xff000000);
+
+        float rho = diametro/2 + distancia*1.5f;
+
+        Log.e(" Radio" , ""+rho);
         float sum=0;
         float position=0;
         for (int i = 0; i < segment.length; i++) {
             float theta=segment[i]/2;
 
-//            float theta = (float) (2*Math.PI*i/segment[i]- Math.PI/2);
-//            if (i == 0){
-//                theta = segment[i]/2;
-//            }else {
-//                theta = segment[i-1]+segment[i]/2;
-//            }
-            float rho = radio + distancia;
+            Log.d("Segment:"+i, ""+segment[i]);
+            Log.d("Position:"+i, ""+position);
+            Log.d("Sum:"+i, ""+sum);
+            Log.d("theta:"+i , ""+theta);
+
+
+            Log.e(" Angulo"+i , ""+(position+theta));
+
             float x = (float) (rho * Math.cos(position+theta));
             float y = (float) (rho * Math.sin(position+theta));
+
+
+            Log.i("X:"+i, ""+x);
+            Log.e("cos"+i, "Math.cos("+(position+theta)+") = "+Math.cos(position+theta));
+            Log.i("y:"+i, ""+y);
+            Log.e("cos"+i, "Math.sin("+(position+theta)+") = "+Math.sin(position+theta));
+
             position+=segment[i];
             sum += segment[i];
-            p.setTextAlign(Paint.Align.CENTER);
-            if (sum<90)
-                canvas.drawText(arrayNombre[i], centroX + x +distancia, centroY + y +distancia, p);
-            if (sum>90 && sum<180)
-                canvas.drawText(arrayNombre[i], centroX + x +distancia, centroY - y +distancia, p);
-            if (sum>180 && sum<270)
-                canvas.drawText(arrayNombre[i], centroX + x +distancia, centroY + y +distancia, p);
-            if (sum>270 && sum<360)
-                canvas.drawText(arrayNombre[i], centroX + x +distancia, centroY + y +distancia, p);
+            canvas.drawText(arrayNombre[i], centroX + (float)(rho * Math.cos(position)), centroY + (float)(rho * Math.sin(position)), textPaint);
+
+//            if (sum<=90){
+//                textPaint.setTextAlign(Paint.Align.LEFT);
+//                canvas.drawText(arrayNombre[i], centroX - x, centroY - y, textPaint);
+//            }
+//            if (sum>90 && sum<=180){
+//                canvas.dra
+//                textPaint.setTextAlign(Paint.Align.RIGHT);
+//                canvas.drawText(arrayNombre[i], centroX - x - rho, centroY + y, textPaint);
+//            }
+//            if (sum>180 && sum<=270){
+//                textPaint.setTextAlign(Paint.Align.RIGHT);
+//                canvas.drawText(arrayNombre[i], centroX + x - rho, centroY + y - rho, textPaint);
+//            }
+//            if (sum>270 && sum<=360){
+//                textPaint.setTextAlign(Paint.Align.LEFT);
+//                canvas.drawText(arrayNombre[i], centroX - x, centroY + y - rho, textPaint);
+//            }
 
 //            if(i == 0) {
 //                p.setTextAlign(Paint.Align.CENTER);
