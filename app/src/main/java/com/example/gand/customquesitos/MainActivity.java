@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
         String [] nombre = {"AAA", "BBB", "CCC", "DDD", "EEE", "FFF", "GGG", "HHH", "III", "JJJ"};
 //        String [] nombre = {"AAA", "BBB", "CCC", "DDD", "EEE"};
 //        float [] data = {1,5,3};
+
+//        float [] data = {50, 50, 50, 50};
+//        String [] nombre = {"AAA", "BBB", "CCC", "DDD"};
         pie.setArrayDatos(data, nombre);
     }
 }

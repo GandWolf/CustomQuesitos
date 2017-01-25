@@ -104,16 +104,34 @@ public class DiagramaQueso extends View {
 
             float[] segment = segmentos();
             float segStartPoint = 0;
+            float centroX=(left+diametro/2);
+            float centroY=top+diametro/2;
 
             arrayColor = generarColor(gamacolor);
             for (int i = 0; i < segment.length; i++) {
                 quesoPaint.setColor(arrayColor[i]);
                 canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
+                canvas.drawArc(rectF, segStartPoint, segment[i], true, circuloPaint);
+
+//                if (segStartPoint<=90) {
+//                    canvas.drawLine(centroX, centroY, (float) (centroX + (diametro / 2) * Math.cos(segStartPoint)), (float) (centroY + (diametro / 2) * Math.sin(segStartPoint )), circuloPaint);
+//                }else{
+//                    if (segStartPoint<=180){
+//                        canvas.drawLine(centroX, centroY, (float) (centroX - (diametro / 2) * Math.cos(segStartPoint )), (float) (centroY - (diametro / 2) * Math.sin(segStartPoint )), circuloPaint);
+//                    }else{
+//                        if (segStartPoint<=270){
+//                            canvas.drawLine(centroX, centroY, (float) (centroX + (diametro / 2) * Math.cos(segStartPoint )), (float) (centroY + (diametro / 2) * Math.sin(segStartPoint )), circuloPaint);
+//                        }else {
+//                            canvas.drawLine(centroX, centroY, (float) (centroX + (diametro / 2) * Math.cos(segStartPoint )), (float) (centroY + (diametro / 2) * Math.sin(segStartPoint )), circuloPaint);
+//                        }
+//                    }
+//                }
+
                 segStartPoint += segment[i];
             }
 
-            canvas.drawCircle(left+(diametro/2),(top + diametro/2),(diametro/2),circuloPaint);
-            dibujarEtiquetas(canvas, (left+diametro/2), (top+diametro/2), diametro/2, distancia, textPaint, segment);
+//            canvas.drawCircle(left+(diametro/2),(top + diametro/2),(diametro/2),circuloPaint);
+            dibujarEtiquetas(canvas, centroX, centroY, diametro/2, distancia, textPaint, segment);
         }
     }
 
@@ -121,6 +139,7 @@ public class DiagramaQueso extends View {
                                   float distancia, Paint p, float[] segment) {
         p.setTextSize(50);
         p.setColor(0xff000000);
+        float sum=0;
         float position=0;
         for (int i = 0; i < segment.length; i++) {
             float theta=segment[i]/2;
@@ -135,18 +154,29 @@ public class DiagramaQueso extends View {
             float x = (float) (rho * Math.cos(position+theta));
             float y = (float) (rho * Math.sin(position+theta));
             position+=segment[i];
-            if(i == 0) {
-                p.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText(arrayNombre[i], x + centroX, y - distancia + centroY, p);
-            } else if(segment[i] <= 90 || segment[i] >= 270) {
-                p.setTextAlign(Paint.Align.LEFT);
-                canvas.drawText(arrayNombre[i], (float) ((rho+distancia) * Math.cos(theta)) + centroX,
-                        (float) ((rho+distancia) * Math.sin(theta)) + centroY, p);
-            } else {
-                p.setTextAlign(Paint.Align.RIGHT);
-                canvas.drawText(arrayNombre[i], (float) ((rho+distancia) * Math.cos(theta)) + centroX,
-                        (float) ((rho+distancia) * Math.sin(theta)) + centroY, p);
-            }
+            sum += segment[i];
+            p.setTextAlign(Paint.Align.CENTER);
+            if (sum<90)
+                canvas.drawText(arrayNombre[i], centroX + x +distancia, centroY + y +distancia, p);
+            if (sum>90 && sum<180)
+                canvas.drawText(arrayNombre[i], centroX + x +distancia, centroY - y +distancia, p);
+            if (sum>180 && sum<270)
+                canvas.drawText(arrayNombre[i], centroX + x +distancia, centroY + y +distancia, p);
+            if (sum>270 && sum<360)
+                canvas.drawText(arrayNombre[i], centroX + x +distancia, centroY + y +distancia, p);
+
+//            if(i == 0) {
+//                p.setTextAlign(Paint.Align.CENTER);
+//                canvas.drawText(arrayNombre[i], x + centroX, y - distancia + centroY, p);
+//            } else if(segment[i] <= 90 || segment[i] >= 270) {
+//                p.setTextAlign(Paint.Align.LEFT);
+//                canvas.drawText(arrayNombre[i], (float) ((rho+distancia) * Math.cos(theta)) + centroX,
+//                        (float) ((rho+distancia) * Math.sin(theta)) + centroY, p);
+//            } else {
+//                p.setTextAlign(Paint.Align.RIGHT);
+//                canvas.drawText(arrayNombre[i], (float) ((rho+distancia) * Math.cos(theta)) + centroX,
+//                        (float) ((rho+distancia) * Math.sin(theta)) + centroY, p);
+//            }
         }
     }
 
@@ -159,7 +189,7 @@ public class DiagramaQueso extends View {
                 break;
             case 3: color = r.getIntArray(R.array.gamaAzul);
                 break;
-            default: color = r.getIntArray(R.array.gamaAzul);
+            default: color = r.getIntArray(R.array.gamaVerde);
         }
         return color;
     }
