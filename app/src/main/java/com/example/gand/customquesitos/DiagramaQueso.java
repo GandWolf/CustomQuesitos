@@ -123,8 +123,8 @@ public class DiagramaQueso extends View {
                 quesoPaint.setColor(arrayColor[i]);
                 canvas.drawArc(rectF, segStartPoint, segment[i], true, quesoPaint);
                 canvas.drawArc(rectF, segStartPoint, segment[i], true, circuloPaint);
-                canvas.drawText(arrayNombre[i],centroX + (float)((diametro/1.8)*Math.cos(segStartPoint+segment[i]/2)),
-                        centroY + (float)((diametro/1.8)*Math.sin(segStartPoint+segment[i]/2)), textPaint);
+//                canvas.drawText(arrayNombre[i],centroX + (float)((diametro/1.8)*Math.cos(segStartPoint+segment[i]/2)),
+//                        centroY + (float)((diametro/1.8)*Math.sin(segStartPoint+segment[i]/2)), textPaint);
 
                 segStartPoint += segment[i];
             }
@@ -233,9 +233,15 @@ public class DiagramaQueso extends View {
         int green = Color.green(pixel);
         int blue = Color.blue(pixel);
 
+        for (int i = 0; i<arrayDatos.length; i++){
+            if (arrayColor[i]==Color.argb(255, red, green, blue)){
+                Toast.makeText(getContext(),"Nombre: "+arrayNombre[i]+
+                        " Datos: "+arrayDatos[i], Toast.LENGTH_SHORT).show();
+            }
+        }
 
 
-        Toast.makeText(getContext(),"Colo R= "+red+" G="+green+" B="+blue, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(),"Colo R= "+red+" G="+green+" B="+blue, Toast.LENGTH_SHORT).show();
 
         return super.onTouchEvent(event);
     }
