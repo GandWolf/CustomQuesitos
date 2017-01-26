@@ -45,28 +45,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int x = (int)event.getX();
-        int y = (int)event.getY();
-
-        Bitmap drawable = getBitmapFromView(queso);
-        int pixel = drawable.getPixel(x,y);
-
-        Toast.makeText(getApplicationContext(),"Colo= "+pixel, Toast.LENGTH_SHORT).show();
-
-        return super.onTouchEvent(event);
-    }
-
-    public static Bitmap getBitmapFromView(View view) {
-        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(returnedBitmap);
-        Drawable bgDrawable =view.getBackground();
-        if (bgDrawable!=null)
-            bgDrawable.draw(canvas);
-        else
-            canvas.drawColor(Color.WHITE);
-        view.draw(canvas);
-        return returnedBitmap;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        int x = (int)event.getX();
+//        int y = (int)event.getY();
+//
+//        Bitmap drawable = getBitmapFromView(main);
+//        int pixel = drawable.getPixel(x,y);
+//
+//        int red = Color.red(pixel);
+//        int green = Color.green(pixel);
+//        int blue = Color.blue(pixel);
+//
+//
+//
+//        Toast.makeText(getApplicationContext(),"Colo R= "+red+" G="+green+" B="+blue, Toast.LENGTH_SHORT).show();
+//
+//        return super.onTouchEvent(event);
+//    }
+//
+//    public static Bitmap getBitmapFromView(View view) {
+//        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(returnedBitmap);
+//        Drawable bgDrawable =view.getBackground();
+//        if (bgDrawable!=null)
+//            bgDrawable.draw(canvas);
+//        else
+//            canvas.drawColor(Color.WHITE);
+//        view.draw(canvas);
+//        return returnedBitmap;
+//    }
 }

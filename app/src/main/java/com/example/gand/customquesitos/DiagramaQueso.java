@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -217,19 +218,37 @@ public class DiagramaQueso extends View {
         this.arrayNombre = nombre;
         invalidate();
     }
-//
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//
-//        int x = (int)event.getX();
-//        int y = (int)event.getY();
-//
-//
-//        Bitmap bitmap = ((BitmapDrawable)getBackground()).getBitmap();
-//        int pixel = bitmap.getPixel(x,y);
-//
-//        Toast.makeText(getContext(),"Colo= "+pixel, Toast.LENGTH_LONG).show();
-//
-//        return super.onTouchEvent(event);
-//    }
+
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int x = (int)event.getX();
+        int y = (int)event.getY();
+
+        Bitmap drawable = getBitmapFromView(this);
+        int pixel = drawable.getPixel(x,y);
+
+        int red = Color.red(pixel);
+        int green = Color.green(pixel);
+        int blue = Color.blue(pixel);
+
+
+
+        Toast.makeText(getContext(),"Colo R= "+red+" G="+green+" B="+blue, Toast.LENGTH_SHORT).show();
+
+        return super.onTouchEvent(event);
+    }
+
+    public static Bitmap getBitmapFromView(View view) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable!=null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+        return returnedBitmap;
+    }
 }//Fin class
